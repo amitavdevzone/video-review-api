@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -15,9 +16,12 @@ class VideoListingTest extends TestCase
     /** @test */
     public function it_shows_list_of_videos(): void
     {
+        $user = User::factory()->create();
+
         Video::factory()->count(5)->create();
 
-        $resp = $this->json('GET', route('video.list'));
+        $resp = $this->actingAs($user)
+            ->json('GET', route('video.list'));
 
         $resp->assertJson(function (AssertableJson $json) {
             $json->where('total', 5)
@@ -27,11 +31,14 @@ class VideoListingTest extends TestCase
     }
 
     /** @test */
-    public function it_shows_first_n_videos()
+    public function it_shows_first_n_videos(): void
     {
+        $user = User::factory()->create();
+
         Video::factory()->count(12)->create();
 
-        $resp = $this->json('GET', route('video.list'));
+        $resp = $this->actingAs($user)
+            ->json('GET', route('video.list'));
 
         $resp->assertJson(function (AssertableJson $json) {
             $json->where('total', 12)
@@ -45,13 +52,16 @@ class VideoListingTest extends TestCase
     }
 
     /** @test */
-    public function it_shows_only_published_video()
+    public function it_shows_only_published_video(): void
     {
+        $user = User::factory()->create();
+
         Video::factory()->count(2)->unPublished()->create();
 
         Video::factory()->count(5)->create();
 
-        $resp = $this->json('GET', route('video.list'));
+        $resp = $this->actingAs($user)
+            ->json('GET', route('video.list'));
 
         $resp->assertJson(function (AssertableJson $json) {
             $json->where('total', 5)

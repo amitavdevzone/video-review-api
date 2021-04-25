@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -15,8 +16,9 @@ class CreateVideoTest extends TestCase
     public function it_creates_a_new_video(): void
     {
         $url = $this->faker->url;
+        $user = User::factory()->create();
 
-        $this->json('POST', route('video.add'), [
+        $this->actingAs($user)->json('POST', route('video.add'), [
             'url' => $url,
             'description' => 'test',
         ]);
@@ -31,8 +33,9 @@ class CreateVideoTest extends TestCase
     public function it_returns_video_in_response(): void
     {
         $url = $this->faker->url;
+        $user = User::factory()->create();
 
-        $resp = $this->json('POST', route('video.add'), [
+        $resp = $this->actingAs($user)->json('POST', route('video.add'), [
             'url' => $url,
         ]);
 
@@ -48,8 +51,9 @@ class CreateVideoTest extends TestCase
     public function it_returns_an_unpublished_video(): void
     {
         $url = $this->faker->url;
+        $user = User::factory()->create();
 
-        $resp = $this->json('POST', route('video.add'), [
+        $resp = $this->actingAs($user)->json('POST', route('video.add'), [
             'url' => $url,
         ]);
 
@@ -63,8 +67,9 @@ class CreateVideoTest extends TestCase
     public function it_adds_description_if_sent(): void
     {
         $url = $this->faker->url;
+        $user = User::factory()->create();
 
-        $resp = $this->json('POST', route('video.add'), [
+        $resp = $this->actingAs($user)->json('POST', route('video.add'), [
             'url' => $url,
             'description' => 'test',
         ]);
@@ -78,7 +83,9 @@ class CreateVideoTest extends TestCase
     /** @test */
     public function it_validates_required_fields(): void
     {
-        $this->json('POST', route('video.add'), [])
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->json('POST', route('video.add'), [])
             ->assertStatus(422)
             ->assertJson(function (AssertableJson $json) {
                 $json->has('errors.url')
