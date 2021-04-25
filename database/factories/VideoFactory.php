@@ -25,9 +25,18 @@ class VideoFactory extends Factory
         return [
             'user_id' => User::factory()->create()->id,
             'url' => $this->faker->url(),
-            'descript' => $this->faker->paragraph(),
+            'description' => $this->faker->paragraph(),
             'type' => 'youtube',
             'is_published' => 1,
         ];
+    }
+
+    public function unPublished(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_published' => 0,
+            ];
+        });
     }
 }

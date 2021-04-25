@@ -9,3 +9,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/video/add', [VideoController::class, 'store'])->name('video.add');
+Route::get('/videos/list', [VideoController::class, 'index'])->name('video.list');
