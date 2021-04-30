@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Rules\YoutubeUrlRule;
 use App\Services\VideoService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -30,7 +31,7 @@ class VideoController extends Controller
     public function store(Request $request): Response
     {
         $postData = $this->validate($request, [
-            'url' => ['required', 'url'],
+            'url' => ['required', 'url', new YoutubeUrlRule],
             'description' => ['sometimes'],
         ]);
 

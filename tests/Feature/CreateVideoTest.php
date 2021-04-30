@@ -12,19 +12,26 @@ class CreateVideoTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    private string $url;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->url = 'https://youtube.com/watch?v=1sTux4ys3iE';
+    }
+
     /** @test */
     public function it_creates_a_new_video(): void
     {
-        $url = $this->faker->url;
         $user = User::factory()->create();
 
         $this->actingAs($user)->json('POST', route('video.add'), [
-            'url' => $url,
+            'url' => $this->url,
             'description' => 'test',
         ]);
 
         $this->assertDatabaseHas('videos', [
-            'url' => $url,
+            'url' => $this->url,
             'description' => 'test'
         ]);
     }
@@ -32,16 +39,15 @@ class CreateVideoTest extends TestCase
     /** @test */
     public function it_returns_video_in_response(): void
     {
-        $url = $this->faker->url;
         $user = User::factory()->create();
 
         $resp = $this->actingAs($user)->json('POST', route('video.add'), [
-            'url' => $url,
+            'url' => $this->url,
         ]);
 
-        $resp->assertJson(function (AssertableJson $json) use ($url) {
+        $resp->assertJson(function (AssertableJson $json) {
             $json->where('id', 1)
-                ->where('url', $url) // same url is coming
+                ->where('url', $this->url) // same url is coming
                 ->where('type', 'youtube') // type is youtube
                 ->etc();
         });
@@ -54,10 +60,10 @@ class CreateVideoTest extends TestCase
         $user = User::factory()->create();
 
         $resp = $this->actingAs($user)->json('POST', route('video.add'), [
-            'url' => $url,
+            'url' => $this->url,
         ]);
 
-        $resp->assertJson(function (AssertableJson $json) use ($url) {
+        $resp->assertJson(function (AssertableJson $json) {
             $json->where('is_published', 0)
                 ->etc();
         });
@@ -66,15 +72,14 @@ class CreateVideoTest extends TestCase
     /** @test */
     public function it_adds_description_if_sent(): void
     {
-        $url = $this->faker->url;
         $user = User::factory()->create();
 
         $resp = $this->actingAs($user)->json('POST', route('video.add'), [
-            'url' => $url,
+            'url' => $this->url,
             'description' => 'test',
         ]);
 
-        $resp->assertJson(function (AssertableJson $json) use ($url) {
+        $resp->assertJson(function (AssertableJson $json) {
             $json->where('description', 'test')
                 ->etc();
         });
