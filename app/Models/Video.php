@@ -22,4 +22,9 @@ class Video extends Model
     {
         return $query->where('is_published', 1);
     }
+
+    public function scopeUnPublished($query): Builder
+    {
+        return $query->where('is_published', 0);
+    }
 }

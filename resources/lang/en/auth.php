@@ -16,6 +16,7 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'wrong_password' => 'The provided credentials are incorrect.'
+    'wrong_password' => 'The provided credentials are incorrect.',
+    'not_allowed' => 'You are not allowed to view this data.',
 
 ];

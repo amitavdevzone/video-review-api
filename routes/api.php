@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminVideoController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
@@ -14,4 +15,10 @@ Route::post('/user/auth', [LoginController::class, 'handleLogin'])->name('user.l
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/video/add', [VideoController::class, 'store'])->name('video.add');
     Route::get('/videos/list', [VideoController::class, 'index'])->name('video.list');
+
+    /*Admin routes*/
+    Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
+        Route::get('/video/list/unpublished', [AdminVideoController::class, 'unPublished'])
+            ->name('admin.video.list');
+    });
 });
