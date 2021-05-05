@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Events\VideoPublished;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +36,17 @@ class VideoService
             'type' => 'youtube',
             'is_published' => 0,
         ]);
+
+        return $video;
+    }
+
+    public function publishVideoById(int $id)
+    {
+        $video = Video::find($id);
+        $video->is_published = 1;
+        $video->save();
+
+        event(new VideoPublished($video));
 
         return $video;
     }
