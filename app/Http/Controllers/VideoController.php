@@ -33,6 +33,7 @@ class VideoController extends Controller
         $postData = $this->validate($request, [
             'url' => ['required', 'url', new YoutubeUrlRule],
             'description' => ['sometimes'],
+            'title' => ['required'],
         ]);
 
         $video = $this->videoService->addVideoSubmission($postData, Auth::user());

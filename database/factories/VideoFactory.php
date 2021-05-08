@@ -26,6 +26,7 @@ class VideoFactory extends Factory
             'user_id' => User::factory()->create()->id,
             'url' => $this->faker->url(),
             'description' => $this->faker->paragraph(),
+            'title' => $this->faker->sentence(),
             'type' => 'youtube',
             'is_published' => 1,
         ];

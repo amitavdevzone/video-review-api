@@ -32,6 +32,7 @@ class VideoService
         $video = Video::create([
             'url' => $postData['url'],
             'description' => $desc,
+            'title' => $postData['title'],
             'user_id' => $user->id,
             'type' => 'youtube',
             'is_published' => 0,

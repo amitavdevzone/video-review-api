@@ -17,6 +17,7 @@ class CreateVideosTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('url');
+            $table->string('title');
             $table->text('description');
             $table->enum('type', ['youtube', 'vimeo'])->default('youtube');
             $table->boolean('is_published')->default(0);

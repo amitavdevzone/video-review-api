@@ -28,6 +28,7 @@ class CreateVideoTest extends TestCase
         $this->actingAs($user)->json('POST', route('video.add'), [
             'url' => $this->url,
             'description' => 'test',
+            'title' => 'Random title',
         ]);
 
         $this->assertDatabaseHas('videos', [
@@ -43,6 +44,7 @@ class CreateVideoTest extends TestCase
 
         $resp = $this->actingAs($user)->json('POST', route('video.add'), [
             'url' => $this->url,
+            'title' => 'Random title',
         ]);
 
         $resp->assertJson(function (AssertableJson $json) {
@@ -56,11 +58,11 @@ class CreateVideoTest extends TestCase
     /** @test */
     public function it_returns_an_unpublished_video(): void
     {
-        $url = $this->faker->url;
         $user = User::factory()->create();
 
         $resp = $this->actingAs($user)->json('POST', route('video.add'), [
             'url' => $this->url,
+            'title' => 'Random title',
         ]);
 
         $resp->assertJson(function (AssertableJson $json) {
@@ -77,6 +79,7 @@ class CreateVideoTest extends TestCase
         $resp = $this->actingAs($user)->json('POST', route('video.add'), [
             'url' => $this->url,
             'description' => 'test',
+            'title' => 'Random title',
         ]);
 
         $resp->assertJson(function (AssertableJson $json) {
@@ -94,6 +97,7 @@ class CreateVideoTest extends TestCase
             ->assertStatus(422)
             ->assertJson(function (AssertableJson $json) {
                 $json->has('errors.url')
+                    ->has('errors.title')
                     ->etc();
             });
     }
