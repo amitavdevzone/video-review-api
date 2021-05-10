@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminVideoController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\TokenController;
 use App\Http\Controllers\UserRegistrationController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/user/register', UserRegistrationController::class)->name('user.register');
 Route::post('/user/auth', [LoginController::class, 'handleLogin'])->name('user.login');
+Route::get('/user/verify/{token:token}', TokenController::class)->name('user.verify');
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/video/add', [VideoController::class, 'store'])->name('video.add');

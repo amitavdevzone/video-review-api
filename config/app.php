@@ -230,4 +230,6 @@ return [
 
     ],
 
+    'expires_at_in_min' => env('EXPIRES_AT_IN_MIN', 30),
+
 ];

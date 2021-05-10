@@ -77,7 +77,22 @@ class RegistrationTest extends TestCase
             });
     }
 
-    public function userRegistrationBaseData(): array
+    /** @test */
+    public function it_adds_a_token_for_verification()
+    {
+        $postData = $this->userRegistrationBaseData();
+
+        $resp = $this->json('POST', route('user.register'), $postData);
+
+        $data = json_decode($resp->getContent(), true);
+
+        $this->assertDatabaseHas('tokens', [
+            'user_id' => $data['user']['id'],
+            'expires_at' => now()->addMinutes(config('app.expires_at_in_min'))
+        ]);
+    }
+
+    private function userRegistrationBaseData(): array
     {
         return [
             'email' => $this->faker->email,
