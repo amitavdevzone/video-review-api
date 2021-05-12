@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\UserRegistered;
 use App\Events\VideoPublished;
+use App\Listeners\UserRegistrationHandler;
 use App\Listeners\VideoPublishedOwnerEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -21,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         VideoPublished::class => [
             VideoPublishedOwnerEmail::class
+        ],
+        UserRegistered::class => [
+            UserRegistrationHandler::class,
         ]
     ];
 

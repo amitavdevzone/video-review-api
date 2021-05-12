@@ -2,9 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Events\UserRegistered;
+use App\Mail\UserVerificationEmail;
+use App\Models\Token;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\
+Facades\Mail;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -90,6 +96,65 @@ class RegistrationTest extends TestCase
             'user_id' => $data['user']['id'],
             'expires_at' => now()->addMinutes(config('app.expires_at_in_min'))
         ]);
+    }
+
+    /** @test */
+    public function it_fires_user_register_event()
+    {
+        Event::fake();
+
+        $postData = $this->userRegistrationBaseData();
+
+        $this->json('POST', route('user.register'), $postData);
+
+        Event::assertDispatched(UserRegistered::class);
+    }
+
+    /** @test */
+    public function it_sends_the_verification_email()
+    {
+        Mail::fake();
+
+        $postData = $this->userRegistrationBaseData();
+
+        $this->json('POST', route('user.register'), $postData);
+
+        Mail::assertQueued(UserVerificationEmail::class);
+    }
+
+    /** @test */
+    public function it_sends_email_to_registered_user()
+    {
+        Mail::fake();
+
+        $postData = $this->userRegistrationBaseData();
+
+        $this->json('POST', route('user.register'), $postData);
+
+        Mail::assertQueued(UserVerificationEmail::class, function ($mail) use ($postData) {
+            $user = User::where('email', $postData['email'])->first();
+            return $mail->hasTo($user);
+        });
+    }
+
+    /** @test */
+    public function it_sends_the_token()
+    {
+        $user = User::factory()->unverified()->create();
+        $token = Token::factory()->create(['user_id' => $user->id]);
+
+        $mailable = new UserVerificationEmail($user, $token);
+        $mailable->assertSeeInHtml($token->token);
+    }
+
+    /** @test */
+    public function it_shows_the_user_name()
+    {
+        $user = User::factory()->unverified()->create();
+        $token = Token::factory()->create(['user_id' => $user->id]);
+
+        $mailable = new UserVerificationEmail($user, $token);
+        $mailable->assertSeeInHtml($user->name);
     }
 
     private function userRegistrationBaseData(): array

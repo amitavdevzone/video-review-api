@@ -232,4 +232,6 @@ return [
 
     'expires_at_in_min' => env('EXPIRES_AT_IN_MIN', 30),
 
+    'front_end_app_url' => env('FRONT_END_APP_URL', 'http://localhost:3000/')
+
 ];
