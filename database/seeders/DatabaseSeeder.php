@@ -23,9 +23,5 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('Password@123'),
             'email_verified_at' => now(),
         ]);
-
-        Video::factory()->count(10)->create([
-            'user_id' => 1,
-        ]);
     }
 }
