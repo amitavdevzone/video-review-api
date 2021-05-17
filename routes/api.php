@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminVideoController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\UserRegistrationController;
 use App\Http\Controllers\VideoController;
@@ -17,6 +18,8 @@ Route::post('/user/auth', [LoginController::class, 'handleLogin'])->name('user.l
 Route::get('/user/verify/{token:token}', TokenController::class)->name('user.verify');
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/user/logout', LogoutController::class)->name('user.logout');
+
     Route::post('/video/add', [VideoController::class, 'store'])->name('video.add');
 
     Route::get('/videos/list', [VideoController::class, 'index'])->name('video.list');

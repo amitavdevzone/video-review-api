@@ -21,6 +21,15 @@ class VideoService
         return false;
     }
 
+    public function youtubeThumbnail(string $url): string
+    {
+        if (strpos($url, 'yout')) {
+            preg_match("#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+(?=\?)|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#", $url, $matches);
+            return $matches[0];
+        }
+        return "";
+    }
+
     public function addVideoSubmission(array $postData, User $user): Model
     {
         $desc = '';
