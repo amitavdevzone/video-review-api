@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use App\Events\VideoPublished;
+use App\Events\VideoSubmitted;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Database\Eloquent\Model;
@@ -46,6 +47,8 @@ class VideoService
             'type' => 'youtube',
             'is_published' => 0,
         ]);
+
+        event(new VideoSubmitted($video));
 
         return $video;
     }

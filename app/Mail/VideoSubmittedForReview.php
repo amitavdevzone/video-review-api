@@ -8,20 +8,21 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class VideoPublishedEmailToOwner extends Mailable implements ShouldQueue
+class VideoSubmittedForReview extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    private Video $video;
+    private $video;
 
     public function __construct(Video $video)
     {
         $this->video = $video;
     }
 
-    public function build(): VideoPublishedEmailToOwner
+    public function build()
     {
-        return $this->subject('Video published')
-            ->markdown('emails.video.publish-email-to-owner');
+        return $this->subject('Video submitted for review')
+            ->markdown('emails.video.video-submit')
+            ->with('video', $this->video);
     }
 }

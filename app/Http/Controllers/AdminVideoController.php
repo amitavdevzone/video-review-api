@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 
 class AdminVideoController extends Controller
 {
-    private VideoService $videoService;
+    private $videoService;
 
     public function __construct(VideoService $videoService)
     {

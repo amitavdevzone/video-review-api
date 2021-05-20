@@ -27,6 +27,21 @@ class LoginTest extends TestCase
     }
 
     /** @test */
+    public function it_sends_the_user_role()
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        $this->json('POST', route('user.login'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ])->assertStatus(200)->assertJson(function (AssertableJson $json) use ($user) {
+            $json->has('token')
+                ->where('role', 'admin')
+                ->etc();
+        });
+    }
+
+    /** @test */
     public function it_validates_wrong_password()
     {
         $user = User::factory()->create();
