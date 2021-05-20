@@ -21,7 +21,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/user/logout', LogoutController::class)->name('user.logout');
 
     Route::post('/video/add', [VideoController::class, 'store'])->name('video.add');
-
+    Route::get('/video/{video}', [VideoController::class, 'view'])->name('video.view');
     Route::get('/videos/list', [VideoController::class, 'index'])->name('video.list');
 
     /*Admin routes*/

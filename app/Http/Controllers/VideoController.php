@@ -40,4 +40,13 @@ class VideoController extends Controller
 
         return response($video, 201);
     }
+
+    public function view(Video $video)
+    {
+        if ($video->is_published != 1) {
+            abort(404, 'Video is not published.');
+        }
+
+        return response($video, 200);
+    }
 }
