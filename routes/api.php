@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminVideoController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\TokenController;
@@ -23,6 +24,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/video/add', [VideoController::class, 'store'])->name('video.add');
     Route::get('/video/{video}', [VideoController::class, 'view'])->name('video.view');
     Route::get('/videos/list', [VideoController::class, 'index'])->name('video.list');
+
+    Route::post('/video/comment', [CommentController::class, 'store'])->name('comment.save');
 
     /*Admin routes*/
     Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {

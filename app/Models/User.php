@@ -49,4 +49,10 @@ class User extends Authenticatable
         return $this->hasMany(Video::class)
             ->orderByDesc('updated_at');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)
+            ->orderByDesc('id');
+    }
 }

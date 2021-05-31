@@ -43,6 +43,8 @@ class VideoController extends Controller
 
     public function view(Video $video)
     {
+        $video->load(['comments', 'comments.user']);
+
         if ($video->is_published != 1) {
             abort(404, 'Video is not published.');
         }

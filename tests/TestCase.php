@@ -9,6 +9,11 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
+    public function notAllowedToGuest($method, $route)
+    {
+        $this->json($method, $route)->assertStatus(401);
+    }
+
     public function checkAllowedToAdmin()
     {
         $user = User::factory()->create();

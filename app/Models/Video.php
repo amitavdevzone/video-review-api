@@ -36,4 +36,10 @@ class Video extends Model
         $videoService = app()->make(VideoService::class);
         return $videoService->youtubeThumbnail($this->url);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)
+            ->orderByDesc('id');
+    }
 }
