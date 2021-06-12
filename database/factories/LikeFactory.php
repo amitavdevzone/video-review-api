@@ -2,19 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Comment;
-use App\Models\User;
-use App\Models\Video;
+use App\Models\Like;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class CommentFactory extends Factory
+class LikeFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Comment::class;
+    protected $model = Like::class;
 
     /**
      * Define the model's default state.
@@ -23,13 +21,8 @@ class CommentFactory extends Factory
      */
     public function definition()
     {
-        $video = Video::factory()->create();
-
         return [
-            'user_id' => $video->user_id,
-            'video_id' => $video->id,
-            'comment' => $this->faker->sentence(),
-            'is_active' => 1,
+            //
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminVideoController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\TokenController;
@@ -26,6 +27,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/videos/list', [VideoController::class, 'index'])->name('video.list');
 
     Route::post('/video/comment', [CommentController::class, 'store'])->name('comment.save');
+
+    Route::post('/like', [LikeController::class, 'store'])->name('like.entity');
 
     /*Admin routes*/
     Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
