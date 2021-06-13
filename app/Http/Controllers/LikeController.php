@@ -33,12 +33,23 @@ class LikeController extends Controller
             ]);
         }
 
-        $like = Like::create([
+        $like = Like::where([
+            'user_id' => Auth::user()->id,
+            'entity_id' => $postData['entity_id'],
+            'entity' => $postData['entity'],
+        ])->first();
+
+        if ($like) {
+            $like->delete();
+            return response(['data' => 'unliked'], 201);
+        }
+
+        Like::create([
             'entity' => $postData['entity'],
             'entity_id' => $postData['entity_id'],
             'user_id' => Auth::user()->id,
         ]);
 
-        return response(['data' => $like], 201);
+        return response(['data' => 'liked'], 201);
     }
 }

@@ -14,4 +14,25 @@ class Like extends Model
         'entity_id',
         'user_id',
     ];
+
+    protected static function booted()
+    {
+        static::created(function (Like $like) {
+            if ($like->entity === 'video') {
+                logger('Increased');
+                $video = Video::find($like->entity_id);
+                $video->like_count++;
+                $video->save();
+            }
+        });
+
+        static::deleted(function (Like $like) {
+            if ($like->entity === 'video') {
+                logger('Decreased');
+                $video = Video::find($like->entity_id);
+                $video->like_count--;
+                $video->save();
+            }
+        });
+    }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Comment;
+use App\Models\Like;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -63,8 +64,7 @@ class LikeEntityTest extends TestCase
             ->assertJson(function (AssertableJson $json) use ($video) {
                 $json
                     ->has('data')
-                    ->where('data.entity', 'video')
-                    ->where('data.entity_id', $video->id)
+                    ->where('data', 'liked')
                     ->etc();
             })
             ->assertStatus(201);
@@ -85,8 +85,32 @@ class LikeEntityTest extends TestCase
             ->assertJson(function (AssertableJson $json) use ($comment) {
                 $json
                     ->has('data')
-                    ->where('data.entity', 'comment')
-                    ->where('data.entity_id', $comment->id)
+                    ->where('data', 'liked')
+                    ->etc();
+            })
+            ->assertStatus(201);
+    }
+
+    /** @test */
+    public function it_removes_the_like_if_requested_again()
+    {
+        $user = User::factory()->create();
+        $video = Video::factory()->create();
+        Like::factory()->create([
+            'entity_id' => $video->id,
+            'user_id' => $user->id,
+        ]);
+
+        $postData = [
+            'entity' => 'video',
+            'entity_id' => $video->id,
+        ];
+
+        $this->actingAs($user)->json('POST', route('like.entity'), $postData)
+            ->assertJson(function (AssertableJson $json) use ($video) {
+                $json
+                    ->has('data')
+                    ->where('data', 'unliked')
                     ->etc();
             })
             ->assertStatus(201);

@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Like;
+use App\Models\User;
+use App\Models\Video;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LikeFactory extends Factory
@@ -22,7 +24,9 @@ class LikeFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'entity' => 'video',
+            'entity_id' => Video::factory()->create()->id,
+            'user_id' => User::factory()->create()->id,
         ];
     }
 }

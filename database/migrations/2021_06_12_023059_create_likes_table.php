@@ -17,7 +17,7 @@ class CreateLikesTable extends Migration
             $likeEntities = config('app.like_entities');
 
             $table->id();
-            $table->enum('entity', $likeEntities)->default('videos');
+            $table->enum('entity', $likeEntities)->default('video');
             $table->unsignedBigInteger('entity_id');
             $table->foreignId('user_id');
             $table->timestamps();
