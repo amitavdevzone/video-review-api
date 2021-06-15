@@ -19,7 +19,6 @@ class Like extends Model
     {
         static::created(function (Like $like) {
             if ($like->entity === 'video') {
-                logger('Increased');
                 $video = Video::find($like->entity_id);
                 $video->like_count++;
                 $video->save();
@@ -28,7 +27,6 @@ class Like extends Model
 
         static::deleted(function (Like $like) {
             if ($like->entity === 'video') {
-                logger('Decreased');
                 $video = Video::find($like->entity_id);
                 $video->like_count--;
                 $video->save();
