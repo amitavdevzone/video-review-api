@@ -1,10 +1,18 @@
-# Video review sample application
+# Video review application
 
-1. Register a user and verify email address 
-    - User register 
-    - Token generation for user verification
-    - Email sent to user
-    - User verifies account
-    - Token deleted from system
+[Course]
 
-2. Email to admin on Video submit
+-   id
+-   name
+-   user_id
+-   description
+-   is_active
+-   student_count
+
+[Chapter]
+
+-   id
+-   name
+-   course_id
+-   video_count
+-   weight
