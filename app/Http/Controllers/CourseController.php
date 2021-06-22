@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class CourseController extends Controller
@@ -51,5 +52,25 @@ class CourseController extends Controller
         Course::whereIn('id', $postData['ids'])->update(['is_active' => 1]);
 
         return response('', 204);
+    }
+
+    public function myCourses()
+    {
+        $courses = Course::query()
+            ->where('user_id', Auth::user()->id)
+            ->get();
+
+        $published = $courses->filter(function ($course) {
+            return $course->is_active;
+        });
+
+        $unPublished = $courses->filter(function ($course) {
+            return !$course->is_active;
+        });
+
+        return response(['data' => [
+            'published' => $published,
+            'unpublished' => $unPublished,
+        ]], 200);
     }
 }

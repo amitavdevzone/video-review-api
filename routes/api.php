@@ -34,6 +34,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('latest-courses', [CourseController::class, 'index'])->name('latest-courses.list');
     Route::post('course', [CourseController::class, 'store'])->name('course.add');
     Route::post('course/activate', [CourseController::class, 'activate'])->name('course.activate');
+    Route::get('my-courses', [CourseController::class, 'myCourses'])->name('courses.my-courses');
 
     /*Admin routes*/
     Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
