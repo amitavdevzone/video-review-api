@@ -25,4 +25,9 @@ class Course extends Model
     {
         return $query->where('is_active', 1);
     }
+
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class)->orderByDesc('id');
+    }
 }

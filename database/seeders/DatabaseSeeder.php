@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Course;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Database\Seeder;
@@ -36,6 +37,12 @@ class DatabaseSeeder extends Seeder
             'title' => 'Next JS Handling email verification token on server side in Next Js to check token',
             'description' => 'In this video, I am going to show you the code behind verifying the token that a user will get on his/her email.',
             'is_published' => 1,
+        ]);
+
+        Course::create([
+            'name' => 'My Laravel course',
+            'description' => 'This is my first Laravel course.',
+            'user_id' => 1,
         ]);
     }
 }

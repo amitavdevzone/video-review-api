@@ -19,6 +19,12 @@ class CourseController extends Controller
         return response(['data' => $courses], 200);
     }
 
+    public function view(Course $course)
+    {
+        $course->load(['chapters']);
+        return response(['data' => $course], 200);
+    }
+
     public function store(Request $request)
     {
         $postData = $this->validate($request, [

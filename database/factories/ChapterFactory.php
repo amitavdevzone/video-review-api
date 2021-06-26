@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Chapter;
+use App\Models\Course;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ChapterFactory extends Factory
@@ -22,7 +23,9 @@ class ChapterFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->faker->name(),
+            'description' => $this->faker->sentence(),
+            'course_id' => Course::factory()->create()->id,
         ];
     }
 }

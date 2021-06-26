@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminVideoController;
+use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LikeController;
@@ -32,9 +33,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/like', [LikeController::class, 'store'])->name('like.entity');
 
     Route::get('latest-courses', [CourseController::class, 'index'])->name('latest-courses.list');
+    Route::get('course/{course}', [CourseController::class, 'view'])->name('course.view');
     Route::post('course', [CourseController::class, 'store'])->name('course.add');
     Route::post('course/activate', [CourseController::class, 'activate'])->name('course.activate');
     Route::get('my-courses', [CourseController::class, 'myCourses'])->name('courses.my-courses');
+
+    Route::post('chapter', [ChapterController::class, 'store'])->name('chapter.save');
 
     /*Admin routes*/
     Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
