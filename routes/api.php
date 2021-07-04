@@ -8,6 +8,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\TokenController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRegistrationController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     /*Admin routes*/
     Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
+        Route::get('/users', [UserController::class, 'index'])->name('admin.user.list');
         Route::get('/video/list/unpublished', [AdminVideoController::class, 'unPublished'])
             ->name('admin.video.list');
 
