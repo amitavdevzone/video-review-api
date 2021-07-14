@@ -17,7 +17,7 @@ class AdminUserMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $user = User::find($request->user()->id);
+        $user = $request->user();
 
         if (!$user || $user->role !== 'admin') {
             return response()->json(['message' => __('auth.not_allowed')], 401);
