@@ -28,6 +28,8 @@ class Course extends Model
 
     public function chapters()
     {
-        return $this->hasMany(Chapter::class)->orderByDesc('id');
+        return $this->hasMany(Chapter::class)
+            ->orderBy('order')
+            ->orderByDesc('id');
     }
 }

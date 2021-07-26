@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('my-courses', [CourseController::class, 'myCourses'])->name('courses.my-courses');
 
     Route::post('chapter', [ChapterController::class, 'store'])->name('chapter.save');
+    Route::post('chapter/sequence-update', [ChapterController::class, 'storeUpdate'])->name('chapter.sequence-save');
 
     /*Admin routes*/
     Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
