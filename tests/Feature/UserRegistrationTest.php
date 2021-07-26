@@ -20,13 +20,17 @@ use function Pest\Laravel\postJson;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-   $this->user =  [
-       'email' => faker()->email,
-       'name' => faker()->name,
-       'password' => 'password',
-       'confirm' => 'password',
-   ];
+    $this->user =  [
+        'email' => faker()->email,
+        'name' => faker()->name,
+        'password' => 'password',
+        'confirm' => 'password',
+    ];
 });
+
+it('registers a user')
+    ->postJson(fn () => route('user.register'))
+    ->assertStatus(201);
 
 it('it allows a user to register', function () {
     postJson(route('user.register'), $this->user)
@@ -34,7 +38,7 @@ it('it allows a user to register', function () {
 });
 
 it('registers a user and verified is null', function () {
-    $resp = postJson(route('user.register'), $this->user)->getContent();
+    postJson(route('user.register'), $this->user)->getContent();
 
     assertDatabaseHas('users', [
         'email' => $this->user['email'],
