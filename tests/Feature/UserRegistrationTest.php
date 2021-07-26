@@ -9,50 +9,74 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\
-Facades\Mail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Webmozart\Assert\Assert;
+use function Pest\Faker\faker;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\postJson;
 
-class RegistrationTest extends TestCase
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+   $this->user =  [
+       'email' => faker()->email,
+       'name' => faker()->name,
+       'password' => 'password',
+       'confirm' => 'password',
+   ];
+});
+
+it('it allows a user to register', function () {
+    postJson(route('user.register'), $this->user)
+        ->assertStatus(201);
+});
+
+it('registers a user and verified is null', function () {
+    $resp = postJson(route('user.register'), $this->user)->getContent();
+
+    assertDatabaseHas('users', [
+        'email' => $this->user['email'],
+        'email_verified_at' => null,
+    ]);
+});
+
+it('pest', function () {
+    postJson(route('user.register'), [])
+        ->assertStatus(422)
+        ->assertJson(function (AssertableJson $json) {
+            $json
+                ->has('errors.email')
+                ->has('errors.password')
+                ->has('errors.confirm')
+                ->has('errors.name')
+                ->etc();
+        });
+});
+
+it('sends verification email to the registered user', function () {
+    Mail::fake();
+
+    postJson(route('user.register'), $this->user);
+
+    Mail::assertQueued(UserVerificationEmail::class, function ($mail) {
+        $user = User::where('email', $this->user)->first();
+        return $mail->hasTo($user);
+    });
+});
+
+it('fires user register event on registration', function () {
+    Event::fake();
+
+    postJson(route('user.register'), $this->user);
+
+    Event::assertDispatched(UserRegistered::class);
+});
+
+class UserRegistrationTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
-
-    /** @test */
-    public function it_allows_a_user_to_register()
-    {
-        $postData = $this->userRegistrationBaseData();
-
-        $this->json('POST', route('user.register'), $postData)
-            ->assertStatus(201);
-    }
-
-    /** @test */
-    public function it_registers_a_user_with_verified_as_null()
-    {
-        $postData = $this->userRegistrationBaseData();
-
-        $this->json('POST', route('user.register'), $postData);
-
-        $this->assertDatabaseHas('users', [
-            'email' => $postData['email'],
-            'email_verified_at' => null
-        ]);
-    }
-
-    /** @test */
-    public function it_validates_required_fields()
-    {
-        $this->json('POST', route('user.register'), [])
-            ->assertStatus(422)
-            ->assertJson(function (AssertableJson $json) {
-                $json->has('errors.email')
-                    ->has('errors.password')
-                    ->has('errors.confirm')
-                    ->has('errors.name')
-                    ->etc();
-            });
-    }
 
     /** @test */
     public function it_validates_passwords_are_same()
@@ -94,7 +118,7 @@ class RegistrationTest extends TestCase
 
         $this->assertDatabaseHas('tokens', [
             'user_id' => $data['user']['id'],
-            'expires_at' => now()->addMinutes(config('app.expires_at_in_min'))
+            'expires_at' => now()->addMinutes(config('app.expires_at_in_min')),
         ]);
     }
 
@@ -120,21 +144,6 @@ class RegistrationTest extends TestCase
         $this->json('POST', route('user.register'), $postData);
 
         Mail::assertQueued(UserVerificationEmail::class);
-    }
-
-    /** @test */
-    public function it_sends_email_to_registered_user()
-    {
-        Mail::fake();
-
-        $postData = $this->userRegistrationBaseData();
-
-        $this->json('POST', route('user.register'), $postData);
-
-        Mail::assertQueued(UserVerificationEmail::class, function ($mail) use ($postData) {
-            $user = User::where('email', $postData['email'])->first();
-            return $mail->hasTo($user);
-        });
     }
 
     /** @test */
